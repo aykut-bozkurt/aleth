@@ -40,7 +40,7 @@ void LegacyVM::optimize()
 {
 	copyCode(33);
 
-	size_t const nBytes = m_ext->code.size();
+	/*size_t const nBytes = m_ext->code.size();
 
 	// build a table of jump destinations for use in verifyJumpDest
 	
@@ -170,7 +170,7 @@ void LegacyVM::optimize()
 		}
 	}
 	TRACE_STR(1, "Finished optimizations")
-#endif	
+#endif	*/
 }
 
 

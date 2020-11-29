@@ -8,6 +8,8 @@
 #include "LegacyVMConfig.h"
 #include "VMFace.h"
 
+#include <immintrin.h>
+
 namespace dev
 {
 namespace eth
@@ -117,8 +119,7 @@ private:
     std::vector<uint64_t> m_jumpDests;
     int64_t verifyJumpDest(u256 const& _dest, bool _throw = true);
 
-    void onOperation() { onOperation(m_OP); }
-    void onOperation(Instruction _instr);
+    void onOperation();
     void adjustStack(unsigned _removed, unsigned _added);
     uint64_t gasForMem(u512 const& _size);
     void updateSSGas();
@@ -156,53 +157,102 @@ private:
     //
     // input bytes are the inline simd type descriptors for the operand vectors on the stack
     //
-#if EIP_616
-
-    void xadd    (uint8_t);
-    void xmul    (uint8_t);
-    void xsub    (uint8_t);
-    void xdiv    (uint8_t);
-    void xsdiv   (uint8_t);
-    void xmod    (uint8_t);
-    void xsmod   (uint8_t);
-    void xlt     (uint8_t);
-    void xslt    (uint8_t);
-    void xgt     (uint8_t);
-    void xsgt    (uint8_t);
-    void xeq     (uint8_t);
-    void xzero   (uint8_t);
-    void xand    (uint8_t);
-    void xoor    (uint8_t);
-    void xxor    (uint8_t);
-    void xnot    (uint8_t);
-    void xshr    (uint8_t);
-    void xsar    (uint8_t);
-    void xshl    (uint8_t);
-    void xrol    (uint8_t);
-    void xror    (uint8_t);
-    void xmload  (uint8_t);
-    void xmstore (uint8_t);
-    void xsload  (uint8_t);
-    void xsstore (uint8_t);
-    void xvtowide(uint8_t);
-    void xwidetov(uint8_t);
-    void xpush   (uint8_t);
-    void xput    (uint8_t, uint8_t);
-    void xget    (uint8_t, uint8_t);
-    void xswizzle(uint8_t);
-    void xshuffle(uint8_t);
+    enum class SimdType : uint8_t {
+        Int2Lanes, // 2 int64_t on SSE register
+        Int4Lanes, // 4 int32_t on SSE register
+        Int8Lanes, // 8 int16_t on SSE register
+        Int16Lanes, // 16 int8_t on SSE register
+        Floating2Lanes, // 2 double on SSE register
+        Floating4Lanes // 4 float on SSE register
+    };
+    void xadd    (SimdType);
+    void xmul    (SimdType);
+    void xsub    (SimdType);
+    void xdiv    (SimdType);
+    void xsdiv   (SimdType);
+    void xmod    (SimdType);
+    void xsmod   (SimdType);
+    void xlt     (SimdType);
+    void xslt    (SimdType);
+    void xgt     (SimdType);
+    void xsgt    (SimdType);
+    void xeq     (SimdType);
+    void xzero   (SimdType);
+    void xand    (SimdType);
+    void xoor    (SimdType);
+    void xxor    (SimdType);
+    void xnot    (SimdType);
+    void xshr    (SimdType);
+    void xsar    (SimdType);
+    void xshl    (SimdType);
+    void xrol    (SimdType);
+    void xror    (SimdType);
+    void xmload  (SimdType);
+    void xmstore (SimdType);
+    void xsload  (SimdType);
+    void xsstore (SimdType);
+    void xvtowide(SimdType);
+    void xwidetov(SimdType);
+    void xpush   (SimdType);
+    void xput    (SimdType, SimdType);
+    void xget    (SimdType, SimdType);
+    void xswizzle(SimdType);
+    void xshuffle(SimdType);
     
     u256 vtow(uint8_t _b, const u256& _in);
     void wtov(uint8_t _b, u256 _in, u256& _o_out);
 
-    uint8_t simdType()
+    SimdType simdType()
     {
         uint8_t nt = m_code[++m_PC];  // advance PC and get simd type from code
         ++m_PC;                       // advance PC to next opcode, ready to continue
-        return nt;
+        return SimdType(nt);
     }
 
-#endif
+    __m128i _mm_mullo_epi8(__m128i a, __m128i b)
+    {
+        // unpack and multiply
+        __m128i dst_even = _mm_mullo_epi16(a, b);
+        __m128i dst_odd = _mm_mullo_epi16(_mm_srli_epi16(a, 8),_mm_srli_epi16(b, 8));
+        // repack
+
+        return _mm_or_si128(_mm_slli_epi16(dst_odd, 8), _mm_srli_epi16(_mm_slli_epi16(dst_even,8), 8));
+    }
+
+    inline __m128i _mm128_mullo_epi64(__m128i ab, __m128i cd)
+    {
+        /* ac = (ab & 0xFFFFFFFF) * (cd & 0xFFFFFFFF); */
+        __m128i ac = _mm_mul_epu32(ab, cd);
+
+        /* b = ab >> 32; */
+        __m128i b = _mm_srli_epi64(ab, 32);
+
+        /* bc = b * (cd & 0xFFFFFFFF); */
+        __m128i bc = _mm_mul_epu32(b, cd);
+
+        /* d = cd >> 32; */
+        __m128i d = _mm_srli_epi64(cd, 32);
+
+        /* ad = (ab & 0xFFFFFFFF) * d; */
+        __m128i ad = _mm_mul_epu32(ab, d);
+
+        /* high = bc + ad; */
+        __m128i high = _mm_add_epi64(bc, ad);
+
+        /* high <<= 32; */
+        high = _mm_slli_epi64(high, 32);
+
+        /* return ac + high; */
+        return _mm_add_epi64(high, ac);
+    }
+
+    inline __m128i _mm_sll_epi8(__m128i a, __m128i b) {
+        return _mm_and_si128(_mm_sll_epi16(a, b), _mm_set1_epi8(0xFFU << _mm_cvtsi128_si64(b)));
+    }
+
+    inline __m128i  _mm_srl_epi8(__m128i a, __m128i b) {
+        return _mm_and_si128(_mm_srl_epi16(a, b), _mm_set1_epi8(0xFFU >> _mm_cvtsi128_si64(b)));
+    }
 };
 
 }
