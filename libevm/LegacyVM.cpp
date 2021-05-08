@@ -58,10 +58,10 @@ uint64_t LegacyVM::decodeJumpvDest(const byte* const _code, uint64_t& _pc, byte 
 //
 // for tracing, checking, metering, measuring ...
 //
-void LegacyVM::onOperation()
+void LegacyVM::onOperation(Instruction _instr)
 {
     if (m_onOp)
-        (m_onOp)(++m_nSteps, m_PC, m_OP,
+        (m_onOp)(++m_nSteps, m_PC, _instr,
             m_newMemSize > m_mem.size() ? (m_newMemSize - m_mem.size()) / 32 : uint64_t(0),
             m_runGas, m_io_gas, this, m_ext);
 }
@@ -202,8 +202,8 @@ void LegacyVM::fetchInstruction()
 void LegacyVM::xadd(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -216,8 +216,8 @@ void LegacyVM::xadd(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -229,8 +229,8 @@ void LegacyVM::xadd(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -242,8 +242,8 @@ void LegacyVM::xadd(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -257,8 +257,8 @@ void LegacyVM::xadd(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -270,8 +270,8 @@ void LegacyVM::xadd(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -288,8 +288,8 @@ void LegacyVM::xadd(SimdType simdType){
 void LegacyVM::xsub(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -302,8 +302,8 @@ void LegacyVM::xsub(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -315,8 +315,8 @@ void LegacyVM::xsub(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -328,8 +328,8 @@ void LegacyVM::xsub(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -343,8 +343,8 @@ void LegacyVM::xsub(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -356,8 +356,8 @@ void LegacyVM::xsub(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -374,8 +374,8 @@ void LegacyVM::xsub(SimdType simdType){
 void LegacyVM::xmul(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64( __m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -401,8 +401,8 @@ void LegacyVM::xmul(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -414,8 +414,8 @@ void LegacyVM::xmul(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -429,8 +429,8 @@ void LegacyVM::xmul(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -442,8 +442,8 @@ void LegacyVM::xmul(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -508,8 +508,8 @@ void LegacyVM::xdiv(SimdType simdType){
 void LegacyVM::xsgt(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -540,8 +540,8 @@ void LegacyVM::xsgt(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -553,8 +553,8 @@ void LegacyVM::xsgt(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -566,8 +566,8 @@ void LegacyVM::xsgt(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -581,8 +581,8 @@ void LegacyVM::xsgt(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -594,8 +594,8 @@ void LegacyVM::xsgt(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -612,8 +612,8 @@ void LegacyVM::xsgt(SimdType simdType){
 void LegacyVM::xslt(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -644,8 +644,8 @@ void LegacyVM::xslt(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -657,8 +657,8 @@ void LegacyVM::xslt(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -670,8 +670,8 @@ void LegacyVM::xslt(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -685,8 +685,8 @@ void LegacyVM::xslt(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -698,8 +698,8 @@ void LegacyVM::xslt(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -756,8 +756,8 @@ void LegacyVM::xlt(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -784,8 +784,8 @@ void LegacyVM::xlt(SimdType simdType){
 void LegacyVM::xgt(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            /*int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            /*int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -798,8 +798,8 @@ void LegacyVM::xgt(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            /*int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            /*int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -811,8 +811,8 @@ void LegacyVM::xgt(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            /*int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            /*int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -824,8 +824,8 @@ void LegacyVM::xgt(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -852,8 +852,8 @@ void LegacyVM::xgt(SimdType simdType){
 void LegacyVM::xeq(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -878,8 +878,8 @@ void LegacyVM::xeq(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -891,8 +891,8 @@ void LegacyVM::xeq(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -904,8 +904,8 @@ void LegacyVM::xeq(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -919,8 +919,8 @@ void LegacyVM::xeq(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -932,8 +932,8 @@ void LegacyVM::xeq(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -950,7 +950,7 @@ void LegacyVM::xeq(SimdType simdType){
 void LegacyVM::xzero(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
             __m128i SSE_ZERO = _mm_setzero_si128();
@@ -974,7 +974,7 @@ void LegacyVM::xzero(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -986,7 +986,7 @@ void LegacyVM::xzero(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -998,7 +998,7 @@ void LegacyVM::xzero(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -1011,7 +1011,7 @@ void LegacyVM::xzero(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -1023,7 +1023,7 @@ void LegacyVM::xzero(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -1040,8 +1040,8 @@ void LegacyVM::xzero(SimdType simdType){
 void LegacyVM::xand(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -1054,8 +1054,8 @@ void LegacyVM::xand(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -1067,8 +1067,8 @@ void LegacyVM::xand(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -1080,8 +1080,8 @@ void LegacyVM::xand(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -1095,8 +1095,8 @@ void LegacyVM::xand(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -1108,8 +1108,8 @@ void LegacyVM::xand(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -1126,8 +1126,8 @@ void LegacyVM::xand(SimdType simdType){
 void LegacyVM::xoor(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -1140,8 +1140,8 @@ void LegacyVM::xoor(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -1153,8 +1153,8 @@ void LegacyVM::xoor(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -1166,8 +1166,8 @@ void LegacyVM::xoor(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -1181,8 +1181,8 @@ void LegacyVM::xoor(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -1194,8 +1194,8 @@ void LegacyVM::xoor(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -1212,8 +1212,8 @@ void LegacyVM::xoor(SimdType simdType){
 void LegacyVM::xxor(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
-            int64_t *vec_b = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
+            int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -1226,8 +1226,8 @@ void LegacyVM::xxor(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
-            int32_t *vec_b = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
+            int32_t *vec_b = reinterpret_cast<int32_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -1239,8 +1239,8 @@ void LegacyVM::xxor(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
-            int16_t *vec_b = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
+            int16_t *vec_b = reinterpret_cast<int16_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -1252,8 +1252,8 @@ void LegacyVM::xxor(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
-            int8_t *vec_b = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
+            int8_t *vec_b = reinterpret_cast<int8_t*>(&m_SP[1]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -1267,8 +1267,8 @@ void LegacyVM::xxor(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
-            double *vec_b = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
+            double *vec_b = reinterpret_cast<double*>(&m_SP[1]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -1280,8 +1280,8 @@ void LegacyVM::xxor(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
-            float *vec_b = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
+            float *vec_b = reinterpret_cast<float*>(&m_SP[1]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -1298,7 +1298,7 @@ void LegacyVM::xxor(SimdType simdType){
 void LegacyVM::xnot(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -1309,7 +1309,7 @@ void LegacyVM::xnot(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -1319,7 +1319,7 @@ void LegacyVM::xnot(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -1329,7 +1329,7 @@ void LegacyVM::xnot(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -1340,7 +1340,7 @@ void LegacyVM::xnot(SimdType simdType){
             break;
         }
         case SimdType::Floating2Lanes:{
-            double *vec_a = reinterpret_cast<double*>(m_SP);
+            double *vec_a = reinterpret_cast<double*>(&m_SP[0]);
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
@@ -1350,7 +1350,7 @@ void LegacyVM::xnot(SimdType simdType){
             break;
         }
         case SimdType::Floating4Lanes:{
-            float *vec_a = reinterpret_cast<float*>(m_SP);
+            float *vec_a = reinterpret_cast<float*>(&m_SP[0]);
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
@@ -1365,7 +1365,7 @@ void LegacyVM::xnot(SimdType simdType){
 void LegacyVM::xshl(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -1376,7 +1376,7 @@ void LegacyVM::xshl(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -1386,7 +1386,7 @@ void LegacyVM::xshl(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -1396,7 +1396,7 @@ void LegacyVM::xshl(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -1420,7 +1420,7 @@ void LegacyVM::xshl(SimdType simdType){
 void LegacyVM::xshr(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
-            int64_t *vec_a = reinterpret_cast<int64_t*>(m_SP);
+            int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
 
@@ -1431,7 +1431,7 @@ void LegacyVM::xshr(SimdType simdType){
         }
         case SimdType::Int4Lanes:
         {
-            int32_t *vec_a = reinterpret_cast<int32_t*>(m_SP);
+            int32_t *vec_a = reinterpret_cast<int32_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
@@ -1441,7 +1441,7 @@ void LegacyVM::xshr(SimdType simdType){
             break;
         }
         case SimdType::Int8Lanes:{
-            int16_t *vec_a = reinterpret_cast<int16_t*>(m_SP);
+            int16_t *vec_a = reinterpret_cast<int16_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
@@ -1451,7 +1451,7 @@ void LegacyVM::xshr(SimdType simdType){
             break;
         }
         case SimdType::Int16Lanes:{
-            int8_t *vec_a = reinterpret_cast<int8_t*>(m_SP);
+            int8_t *vec_a = reinterpret_cast<int8_t*>(&m_SP[0]);
 
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
@@ -1595,6 +1595,7 @@ void LegacyVM::interpretCases()
 
             // Self-destructs only have gas cost starting with EIP 150
             m_runGas = toInt63(m_schedule->selfdestructGas);
+            updateIOGas();
 
             Address const dest = asAddress(m_SP[0]);
             // Starting with EIP150, self-destructs need to pay both gas cost and account creation
@@ -1604,10 +1605,12 @@ void LegacyVM::interpretCases()
                 (!m_schedule->eip158Mode || m_ext->balance(m_ext->myAddress) > 0))
             {
                 if (!m_ext->exists(dest))
-                    m_runGas += m_schedule->callNewAccountGas;
+                {
+                    m_runGas = m_schedule->callNewAccountGas;
+                    updateIOGas();
+                }
             }
 
-            updateIOGas();
             m_ext->selfdestruct(dest);
             m_bounce = 0;
         }
@@ -2726,6 +2729,8 @@ void LegacyVM::interpretCases()
         CASE(PUSHC)
         {
 #if EVM_USE_CONSTANT_POOL
+            auto const originalOp = static_cast<byte>(Instruction::PUSH1) + m_code[m_PC + 3] + 1;
+            onOperation(static_cast<Instruction>(originalOp));
             ON_OP();
             updateIOGas();
 
@@ -2821,7 +2826,7 @@ void LegacyVM::interpretCases()
         CASE(JUMPC)
         {
 #if EVM_REPLACE_CONST_JUMP
-            ON_OP();
+            onOperation(Instruction::JUMP);
             updateIOGas();
 
             m_PC = uint64_t(m_SP[0]);
@@ -2834,7 +2839,7 @@ void LegacyVM::interpretCases()
         CASE(JUMPCI)
         {
 #if EVM_REPLACE_CONST_JUMP
-            ON_OP();
+            onOperation(Instruction::JUMPI);
             updateIOGas();
 
             if (m_SP[1])
