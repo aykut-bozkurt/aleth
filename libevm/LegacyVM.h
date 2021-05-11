@@ -8,10 +8,10 @@
 #include "LegacyVMConfig.h"
 #include "VMFace.h"
 
-//#include <immintrin.h>
-#include <mmintrin.h> // mmx
-#include <xmmintrin.h> // sse
-#include <emmintrin.h> // sse2
+#include <immintrin.h>
+//#include <mmintrin.h> // mmx
+//#include <xmmintrin.h> // sse
+//#include <emmintrin.h> // sse2
 
 namespace dev
 {

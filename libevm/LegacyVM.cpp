@@ -204,10 +204,10 @@ void LegacyVM::xadd(SimdType simdType){
         case SimdType::Int2Lanes:{
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
+			
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
-
-            __m128i SSE_B =  _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B =  _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             __m128i SSE_A_PLUS_B = _mm_add_epi64(SSE_A, SSE_B);
 
@@ -291,12 +291,12 @@ void LegacyVM::xsub(SimdType simdType){
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B =  _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B =  _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             __m128i SSE_A_SUB_B = _mm_sub_epi64(SSE_A, SSE_B);
-
+			
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_A_SUB_B));
             break;
         }
@@ -377,9 +377,9 @@ void LegacyVM::xmul(SimdType simdType){
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64( __m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B = _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B = _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             __m128i SSE_A_MUL_B = _mm128_mullo_epi64(SSE_A, SSE_B);
 
@@ -505,15 +505,162 @@ void LegacyVM::xdiv(SimdType simdType){
     }
 }
 
+void LegacyVM::xsdiv(SimdType simdType)
+{
+    switch (simdType)
+    {
+    case SimdType::Int2Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int4Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int8Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int16Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Floating2Lanes: {
+        double* vec_a = reinterpret_cast<double*>(m_SP);
+        double* vec_b = reinterpret_cast<double*>(m_SP);
+
+        __m128d SSE_A = _mm_load_pd(vec_a);
+
+        __m128d SSE_B = _mm_load_pd(vec_b);
+
+        __m128d SSE_A_DIV_B = _mm_div_pd(SSE_A, SSE_B);
+
+        _mm_store_pd(reinterpret_cast<double*>(m_SPP), SSE_A_DIV_B);
+        break;
+    }
+    case SimdType::Floating4Lanes: {
+        float* vec_a = reinterpret_cast<float*>(m_SP);
+        float* vec_b = reinterpret_cast<float*>(m_SP);
+
+        __m128 SSE_A = _mm_load_ps(vec_a);
+
+        __m128 SSE_B = _mm_load_ps(vec_b);
+
+        __m128 SSE_A_DIV_B = _mm_div_ps(SSE_A, SSE_B);
+
+        _mm_store_ps(reinterpret_cast<float*>(m_SPP), SSE_A_DIV_B);
+        break;
+    }
+    }
+}
+
+void LegacyVM::xmod(SimdType simdType)
+{
+    switch (simdType)
+    {
+    case SimdType::Int2Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int4Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int8Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int16Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Floating2Lanes: {
+        double* vec_a = reinterpret_cast<double*>(m_SP);
+        double* vec_b = reinterpret_cast<double*>(m_SP);
+
+        __m128d SSE_A = _mm_load_pd(vec_a);
+
+        __m128d SSE_B = _mm_load_pd(vec_b);
+
+        __m128d SSE_A_DIV_B = _mm_div_pd(SSE_A, SSE_B);
+
+        _mm_store_pd(reinterpret_cast<double*>(m_SPP), SSE_A_DIV_B);
+        break;
+    }
+    case SimdType::Floating4Lanes: {
+        float* vec_a = reinterpret_cast<float*>(m_SP);
+        float* vec_b = reinterpret_cast<float*>(m_SP);
+
+        __m128 SSE_A = _mm_load_ps(vec_a);
+
+        __m128 SSE_B = _mm_load_ps(vec_b);
+
+        __m128 SSE_A_DIV_B = _mm_div_ps(SSE_A, SSE_B);
+
+        _mm_store_ps(reinterpret_cast<float*>(m_SPP), SSE_A_DIV_B);
+        break;
+    }
+    }
+}
+
+void LegacyVM::xsmod(SimdType simdType)
+{
+    switch (simdType)
+    {
+    case SimdType::Int2Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int4Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int8Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Int16Lanes: {
+        throwBadInstruction();
+        break;
+    }
+    case SimdType::Floating2Lanes: {
+        double* vec_a = reinterpret_cast<double*>(m_SP);
+        double* vec_b = reinterpret_cast<double*>(m_SP);
+
+        __m128d SSE_A = _mm_load_pd(vec_a);
+
+        __m128d SSE_B = _mm_load_pd(vec_b);
+
+        __m128d SSE_A_DIV_B = _mm_div_pd(SSE_A, SSE_B);
+
+        _mm_store_pd(reinterpret_cast<double*>(m_SPP), SSE_A_DIV_B);
+        break;
+    }
+    case SimdType::Floating4Lanes: {
+        float* vec_a = reinterpret_cast<float*>(m_SP);
+        float* vec_b = reinterpret_cast<float*>(m_SP);
+
+        __m128 SSE_A = _mm_load_ps(vec_a);
+
+        __m128 SSE_B = _mm_load_ps(vec_b);
+
+        __m128 SSE_A_DIV_B = _mm_div_ps(SSE_A, SSE_B);
+
+        _mm_store_ps(reinterpret_cast<float*>(m_SPP), SSE_A_DIV_B);
+        break;
+    }
+    }
+}
+
 void LegacyVM::xsgt(SimdType simdType){
     switch(simdType){
         case SimdType::Int2Lanes:{
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B = _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B = _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             int32_t ltRes[4];
             __m128i SSE_A_LT_B = _mm_cmplt_epi32(SSE_A, SSE_B);
@@ -535,7 +682,7 @@ void LegacyVM::xsgt(SimdType simdType){
                     res[i] = 0;
                 }
             }
-            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64(__m64(res[0]),__m64(res[1]))));
+            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64x(res[0], res[1])));
             break;
         }
         case SimdType::Int4Lanes:
@@ -615,9 +762,9 @@ void LegacyVM::xslt(SimdType simdType){
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B = _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B = _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             int32_t gtRes[4];
             __m128i SSE_A_GT_B = _mm_cmpgt_epi32(SSE_A, SSE_B);
@@ -639,7 +786,7 @@ void LegacyVM::xslt(SimdType simdType){
                     res[i] = 0;
                 }
             }
-            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64(__m64(res[0]),__m64(res[1]))));
+            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64x(res[0], res[1])));
             break;
         }
         case SimdType::Int4Lanes:
@@ -855,9 +1002,9 @@ void LegacyVM::xeq(SimdType simdType){
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B = _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B = _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             int32_t eqRes[4];
             __m128i SSE_A_EQ_B = _mm_cmpeq_epi32(SSE_A, SSE_B);
@@ -873,7 +1020,7 @@ void LegacyVM::xeq(SimdType simdType){
                     res[i] = 0;
                 }
             }
-            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64(__m64(res[0]),__m64(res[1]))));
+            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64x(res[0], res[1])));
             break;
         }
         case SimdType::Int4Lanes:
@@ -952,7 +1099,7 @@ void LegacyVM::xzero(SimdType simdType){
         case SimdType::Int2Lanes:{
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
             __m128i SSE_ZERO = _mm_setzero_si128();
 
             int32_t eqRes[4];
@@ -969,7 +1116,7 @@ void LegacyVM::xzero(SimdType simdType){
                     res[i] = 0;
                 }
             }
-            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64(__m64(res[0]),__m64(res[1]))));
+            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(_mm_set_epi64x(res[0], res[1])));
             break;
         }
         case SimdType::Int4Lanes:
@@ -1043,9 +1190,9 @@ void LegacyVM::xand(SimdType simdType){
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B = _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B = _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             __m128i SSE_A_AND_B = _mm_and_si128(SSE_A, SSE_B);
 
@@ -1129,9 +1276,9 @@ void LegacyVM::xoor(SimdType simdType){
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B = _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B = _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             __m128i SSE_A_OR_B = _mm_or_si128(SSE_A, SSE_B);
 
@@ -1215,9 +1362,9 @@ void LegacyVM::xxor(SimdType simdType){
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
             int64_t *vec_b = reinterpret_cast<int64_t*>(&m_SP[1]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_B = _mm_set_epi64(__m64(vec_b[1]), __m64(vec_b[0]));
+            __m128i SSE_B = _mm_set_epi64x(vec_b[1], vec_b[0]);
 
             __m128i SSE_A_XOR_B = _mm_xor_si128(SSE_A, SSE_B);
 
@@ -1300,9 +1447,9 @@ void LegacyVM::xnot(SimdType simdType){
         case SimdType::Int2Lanes:{
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_A_NOT = ~SSE_A;
+            __m128i SSE_A_NOT = _mm_andnot_si128(SSE_A,	SSE_A);
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_A_NOT));
             break;
@@ -1313,7 +1460,7 @@ void LegacyVM::xnot(SimdType simdType){
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
-            __m128i SSE_A_NOT = ~SSE_A;
+            __m128i SSE_A_NOT = _mm_andnot_si128(SSE_A, SSE_A);
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_A_NOT));
             break;
@@ -1323,7 +1470,7 @@ void LegacyVM::xnot(SimdType simdType){
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
-            __m128i SSE_A_NOT = ~SSE_A;
+            __m128i SSE_A_NOT = _mm_andnot_si128(SSE_A, SSE_A);
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_A_NOT));
             break;
@@ -1334,7 +1481,7 @@ void LegacyVM::xnot(SimdType simdType){
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
-            __m128i SSE_A_NOT = ~SSE_A;
+            __m128i SSE_A_NOT = _mm_andnot_si128(SSE_A, SSE_A);
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_A_NOT));
             break;
@@ -1344,9 +1491,9 @@ void LegacyVM::xnot(SimdType simdType){
 
             __m128d SSE_A = _mm_load_pd(vec_a);
 
-            __m128i SSE_A_NOT = ~_mm_castpd_si128(SSE_A);
+            __m128d SSE_A_NOT = _mm_andnot_pd(SSE_A, SSE_A);
 
-            _mm_store_pd(reinterpret_cast<double*>(m_SPP), _mm_castsi128_pd(SSE_A_NOT));
+            _mm_store_pd(reinterpret_cast<double*>(m_SPP), SSE_A_NOT);
             break;
         }
         case SimdType::Floating4Lanes:{
@@ -1354,9 +1501,9 @@ void LegacyVM::xnot(SimdType simdType){
 
             __m128 SSE_A = _mm_load_ps(vec_a);
 
-            __m128i SSE_A_NOT = ~_mm_castps_si128(SSE_A);
+            __m128 SSE_A_NOT = _mm_andnot_ps(SSE_A, SSE_A);
 
-            _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_A_NOT));
+            _mm_store_ps(reinterpret_cast<float*>(m_SPP), SSE_A_NOT);
             break;
         }
     }
@@ -1367,9 +1514,9 @@ void LegacyVM::xshl(SimdType simdType){
         case SimdType::Int2Lanes:{
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_SHL = _mm_sll_epi64(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SHL = _mm_sll_epi64(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SHL));
             break;
@@ -1380,7 +1527,7 @@ void LegacyVM::xshl(SimdType simdType){
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
-            __m128i SSE_SHL = _mm_sll_epi32(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SHL = _mm_sll_epi32(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SHL));
             break;
@@ -1390,7 +1537,7 @@ void LegacyVM::xshl(SimdType simdType){
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
-            __m128i SSE_SHL = _mm_sll_epi16(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SHL = _mm_sll_epi16(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SHL));
             break;
@@ -1401,7 +1548,7 @@ void LegacyVM::xshl(SimdType simdType){
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
-            __m128i SSE_SHL = _mm_sll_epi8(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SHL = _mm_sll_epi8(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SHL));
             break;
@@ -1422,9 +1569,9 @@ void LegacyVM::xshr(SimdType simdType){
         case SimdType::Int2Lanes:{
             int64_t *vec_a = reinterpret_cast<int64_t*>(&m_SP[0]);
 
-            __m128i SSE_A = _mm_set_epi64(__m64(vec_a[1]), __m64(vec_a[0]));
+            __m128i SSE_A = _mm_set_epi64x(vec_a[1], vec_a[0]);
 
-            __m128i SSE_SRL = _mm_srl_epi64(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SRL = _mm_srl_epi64(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SRL));
             break;
@@ -1435,7 +1582,7 @@ void LegacyVM::xshr(SimdType simdType){
 
             __m128i SSE_A = _mm_set_epi32(vec_a[3], vec_a[2], vec_a[1], vec_a[0]);
 
-            __m128i SSE_SRL = _mm_srl_epi32(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SRL = _mm_srl_epi32(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SRL));
             break;
@@ -1445,7 +1592,7 @@ void LegacyVM::xshr(SimdType simdType){
 
             __m128i SSE_A = _mm_set_epi16(vec_a[7],  vec_a[6],  vec_a[5], vec_a[4], vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
-            __m128i SSE_SRL = _mm_srl_epi16(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SRL = _mm_srl_epi16(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SRL));
             break;
@@ -1456,7 +1603,7 @@ void LegacyVM::xshr(SimdType simdType){
             __m128i SSE_A = _mm_set_epi8(vec_a[15], vec_a[14], vec_a[13], vec_a[12], vec_a[11], vec_a[10], vec_a[9], vec_a[8],
                                          vec_a[7],  vec_a[6],  vec_a[5],  vec_a[4],  vec_a[3],  vec_a[2],  vec_a[1], vec_a[0]);
 
-            __m128i SSE_SRL = _mm_srl_epi8(SSE_A, _mm_set1_epi64(__m64(m_SP[1].convert_to<uint64_t>())));
+            __m128i SSE_SRL = _mm_srl_epi8(SSE_A, _mm_set1_epi64x(m_SP[1].convert_to<uint64_t>()));
 
             _mm_store_ps(reinterpret_cast<float*>(m_SPP), _mm_castsi128_ps(SSE_SRL));
             break;
