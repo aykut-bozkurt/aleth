@@ -20,6 +20,11 @@ target_link_libraries(
     PRIVATE aleth-interpreter aleth-buildinfo jsoncpp_lib_static Boost::program_options evmc::loader
 )
 
+target_include_directories(
+        evm
+        PUBLIC ../libsimdpp
+)
+
 include(../libsimdpp/cmake/SimdppMultiarch.cmake)
 simdpp_get_runnable_archs(RUNNABLE_ARCHS)
 message("Supported libsimdpp archs are ${RUNNABLE_ARCHS}")

@@ -155,7 +155,7 @@ static const std::map<Instruction,  InstructionInfo> c_instructionInfo =
     { Instruction::PUTLOCAL,     { "PUTLOCAL",            1,    0,  Tier::VeryLow } },
     { Instruction::GETLOCAL,     { "GETLOCAL",            0,    1,  Tier::VeryLow } },
 
-    { Instruction::XADD,         { "XADD",                0,    0,  Tier::Special } },
+    { Instruction::XADD,         { "XADD",                2,    1,  Tier::Special } },
     { Instruction::XMUL,         { "XMUL",                2,    1,  Tier::Special } },
     { Instruction::XSUB,         { "XSUB",                2,    1,  Tier::Special } },
     { Instruction::XDIV,         { "XDIV",                2,    1,  Tier::Special } },
