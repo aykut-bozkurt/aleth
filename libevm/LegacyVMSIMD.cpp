@@ -43,7 +43,7 @@ private:
 }
 
 using namespace std;
-using simdpp;
+using namespace simdpp;
 using namespace dev;
 using namespace dev::eth;
 using namespace dev::simd;
