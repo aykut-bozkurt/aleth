@@ -30,7 +30,7 @@ namespace dev
 #endif
 
 #ifndef EIP_616
-#define EIP_616 false
+#define EIP_616 true
 #endif
 
 #ifndef EVM_JUMP_DISPATCH
