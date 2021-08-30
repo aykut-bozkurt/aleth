@@ -27,13 +27,13 @@ class SIMDByte{
 public:
     explicit SIMDByte(uint8_t simdByte) : simdByte(simdByte){}
 
-    OpType getOpType() const {
+    OpType getOpType() const { // 0, 1
         return static_cast<OpType>(simdByte & 0b00000001u);
     }
-    LaneWidth getLaneWidth() const {
+    LaneWidth getLaneWidth() const { // 0, 4, 8, 12
         return static_cast<LaneWidth>((simdByte & 0b00001100u) >> 2u);
     }
-    LaneCount getLaneCount() const {
+    LaneCount getLaneCount() const { // 0, 32, 64, 96, 128
         return static_cast<LaneCount>((simdByte & 0b11100000u) >> 5u);
     }
 private:

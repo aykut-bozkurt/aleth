@@ -209,10 +209,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::add(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -220,10 +220,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::sub(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -231,10 +231,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::mul_lo(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -242,10 +242,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::mul(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -253,10 +253,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::div(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class SimdVecMask, class UnderlyingType>
@@ -264,11 +264,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVecMask lane2Width1C = simdpp::cmp_lt(xmmA, xmmB);
 
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
     }
 
     template<class SimdVec, class SimdVecMask, class UnderlyingType>
@@ -276,11 +276,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVecMask lane2Width1C = simdpp::cmp_gt(xmmA, xmmB);
 
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
     }
 
     template<class SimdVec, class SimdVecMask, class UnderlyingType>
@@ -288,11 +288,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVecMask lane2Width1C = simdpp::cmp_eq(xmmA, xmmB);
 
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
     }
 
     template<class SimdVec, class SimdVecMask, class UnderlyingType>
@@ -300,11 +300,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         UnderlyingType vec_1bytesB[32] = {0};
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVecMask lane2Width1C = simdpp::cmp_eq(xmmA, xmmB);
 
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), lane2Width1C.unmask());
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -312,10 +312,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::bit_and(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -323,10 +323,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::bit_or(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -334,19 +334,19 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::bit_xor(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
     void simdNot(){
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
         SimdVec xmmC = simdpp::bit_not(xmmA);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -354,10 +354,10 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::shift_l(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -365,18 +365,18 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        SimdVec xmmB = simdpp::load(vec_1bytesB);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
         SimdVec xmmC = simdpp::shift_r(xmmA, xmmB);
-        simdpp::store(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
     }
 
     template<class SimdVec, class UnderlyingType>
     void simdPush(){
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_code[m_PC]);
 
-        SimdVec xmmA = simdpp::load(vec_1bytesA);
-        simdpp::store(reinterpret_cast<uint8_t*>(m_SPP), xmmA);
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        simdpp::store_u(reinterpret_cast<uint8_t*>(m_SPP), xmmA);
         m_PC += (sizeof(UnderlyingType) * xmmA.length);
     }
 #endif

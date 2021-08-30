@@ -1,7 +1,7 @@
 function(set_fastest_available_x86archs ARCH_LIST_VAR)
 
     set(FOUND_ARCH false)
-    # avx2 subsets
+    # avx subsets
     set(AVX2_RUNNABLE_ARCHS ${RUNNABLE_ARCHS})
     set(AVX_RUNNABLE_ARCHS ${RUNNABLE_ARCHS})
     set(SSSE3_RUNNABLE_ARCHS ${RUNNABLE_ARCHS})
@@ -32,22 +32,22 @@ function(set_fastest_available_x86archs ARCH_LIST_VAR)
         message("AVX instructions will be used.")
         set(FOUND_ARCH true)
         add_definitions(-DSIMDPP_ARCH_X86_AVX)
-        add_definitions(-maavx)
+        add_definitions(-mavx)
     elseif(${SSSE3_TOTAL_ARCH} GREATER 0)
         message("SSSE3 instructions will be used.")
         set(FOUND_ARCH true)
         add_definitions(-DSIMDPP_ARCH_X86_SSE3)
-        add_definitions(-massse3)
+        add_definitions(-mssse3)
     elseif(${SSE3_TOTAL_ARCH} GREATER 0)
         message("SSE3 instructions will be used.")
         set(FOUND_ARCH true)
         add_definitions(-DSIMDPP_ARCH_X86_SSE3)
-        add_definitions(-masse3)
+        add_definitions(-msse3)
     elseif(${SSE2_TOTAL_ARCH} GREATER 0)
         message("SSE2 instructions will be used.")
         set(FOUND_ARCH true)
         add_definitions(-DSIMDPP_ARCH_X86_SSE2)
-        add_definitions(-masse2)
+        add_definitions(-msse2)
     endif()
 
     # sse_4.1 subsets
@@ -60,42 +60,7 @@ function(set_fastest_available_x86archs ARCH_LIST_VAR)
         message("SSE_4_1 instructions will be used.")
         set(FOUND_ARCH true)
         add_definitions(-DSIMDPP_ARCH_X86_SSE_4_1)
-        add_definitions(-masse4.1)
-    endif()
-
-    # fma subsets
-    set(FMA3_RUNNABLE_ARCHS ${RUNNABLE_ARCHS})
-    set(FMA4_RUNNABLE_ARCHS ${RUNNABLE_ARCHS})
-
-    list(FILTER FMA3_RUNNABLE_ARCHS INCLUDE REGEX ".*X86_FMA3.*")
-    list(LENGTH FMA3_RUNNABLE_ARCHS FMA3_TOTAL_ARCH)
-
-    list(FILTER FMA4_RUNNABLE_ARCHS INCLUDE REGEX ".*X86_FMA4.*")
-    list(LENGTH FMA4_RUNNABLE_ARCHS FMA4_TOTAL_ARCH)
-
-    if(${FMA4_TOTAL_ARCH} GREATER 0)
-        message("FMA4 instructions will be used.")
-        set(FOUND_ARCH true)
-        add_definitions(-DSIMDPP_ARCH_X86_FMA4)
-        add_definitions(-mfma4)
-    elseif(${FMA3_TOTAL_ARCH} GREATER 0)
-        message("FMA3 instructions will be used.")
-        set(FOUND_ARCH true)
-        add_definitions(-DSIMDPP_ARCH_X86_FMA3)
-        add_definitions(-mfma)
-    endif()
-
-    # xop subset
-    set(XOP_RUNNABLE_ARCHS ${RUNNABLE_ARCHS})
-
-    list(FILTER XOP_RUNNABLE_ARCHS INCLUDE REGEX ".*X86_XOP.*")
-    list(LENGTH XOP_RUNNABLE_ARCHS XOP_TOTAL_ARCH)
-
-    if(${XOP_TOTAL_ARCH} GREATER 0)
-        message("XOP instructions will be used.")
-        set(FOUND_ARCH true)
-        add_definitions(-DSIMDPP_ARCH_X86_XOP)
-        add_definitions(-mxop)
+        add_definitions(-msse4.1)
     endif()
 
     if(NOT ${FOUND_ARCH})
