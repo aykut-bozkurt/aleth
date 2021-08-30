@@ -2066,26 +2066,6 @@ void LegacyVM::xror(uint8_t)
     //todo
 }
 
-void LegacyVM::xmload  (uint8_t){
-    // todo
-    //m_SPP[0] = (u256)*(h256 const*)(m_mem.data() + (unsigned)m_SP[0]);
-}
-
-void LegacyVM::xmstore (uint8_t){
-    //todo
-    //*(h256*)&m_mem[(unsigned)m_SP[0]] = (h256)m_SP[1];
-}
-
-void LegacyVM::xsload  (uint8_t){
-    //todo
-    //m_SPP[0] = m_ext->store(m_SP[0]);
-}
-
-void LegacyVM::xsstore (uint8_t){
-    //todo
-    //m_ext->setStore(m_SP[0], m_SP[1]);
-}
-
 void LegacyVM::xpush (uint8_t simd){
     auto simdByte = SIMDByte{simd};
 
@@ -2241,6 +2221,330 @@ void LegacyVM::xpush (uint8_t simd){
         break;
     }
     }
+}
+
+void LegacyVM::xmload  (uint8_t simd){
+    auto simdByte = SIMDByte{simd};
+
+    switch(simdByte.getOpType()){
+    case OpType::Int: {
+        switch (simdByte.getLaneWidth())
+        {
+        case LaneWidth::Bytes1: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMLoad<uint8<2>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMLoad<uint8<4>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMLoad<uint8<8>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdMLoad<uint8<16>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes32: {
+                simdMLoad<uint8<32>, uint8_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes2: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMLoad<uint16<2>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMLoad<uint16<4>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMLoad<uint16<8>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdMLoad<uint16<16>, uint16_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes4: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMLoad<uint32<2>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMLoad<uint32<4>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMLoad<uint32<8>, uint32_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes8: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMLoad<uint64<2>, uint64_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMLoad<uint64<4>, uint64_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case OpType::Floating: {
+        switch (simdByte.getLaneWidth())
+        {
+        case LaneWidth::Bytes4: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMLoad<float32<2>, float>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMLoad<float32<4>, float>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMLoad<float32<8>, float>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes8: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMLoad<float64<2>, double>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMLoad<float64<4>, double>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        default: {
+            break;
+        }
+        }
+        break;
+    }
+    default:{
+        break;
+    }
+    }
+}
+
+void LegacyVM::xmstore (uint8_t simd){
+    auto simdByte = SIMDByte{simd};
+
+    switch(simdByte.getOpType()){
+    case OpType::Int: {
+        switch (simdByte.getLaneWidth())
+        {
+        case LaneWidth::Bytes1: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMStore<uint8<2>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMStore<uint8<4>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMStore<uint8<8>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdMStore<uint8<16>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes32: {
+                simdMStore<uint8<32>, uint8_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes2: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMStore<uint16<2>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMStore<uint16<4>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMStore<uint16<8>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdMStore<uint16<16>, uint16_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes4: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMStore<uint32<2>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMStore<uint32<4>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMStore<uint32<8>, uint32_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes8: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMStore<uint64<2>, uint64_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMStore<uint64<4>, uint64_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        default:
+            break;
+        }
+        break;
+    }
+    case OpType::Floating: {
+        switch (simdByte.getLaneWidth())
+        {
+        case LaneWidth::Bytes4: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMStore<float32<2>, float>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMStore<float32<4>, float>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMStore<float32<8>, float>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes8: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMStore<float64<2>, double>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMStore<float64<4>, double>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        default: {
+            break;
+        }
+        }
+        break;
+    }
+    default:{
+        break;
+    }
+    }
+}
+
+void LegacyVM::xsload  (uint8_t){
+    //todo
+    //m_SPP[0] = m_ext->store(m_SP[0]);
+}
+
+void LegacyVM::xsstore (uint8_t){
+    //todo
+    //m_ext->setStore(m_SP[0], m_SP[1]);
 }
 
 void LegacyVM::xput (uint8_t, uint8_t){

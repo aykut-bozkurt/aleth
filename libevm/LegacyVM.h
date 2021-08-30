@@ -379,6 +379,28 @@ private:
         simdpp::store_u(reinterpret_cast<uint8_t*>(m_SPP), xmmA);
         m_PC += (sizeof(UnderlyingType) * xmmA.length);
     }
+
+    template<class SimdVec, class UnderlyingType>
+    void simdMLoad(){
+        auto vec_Idx = reinterpret_cast<uint8_t*>(&m_SP[0]);
+        auto mem_ptr = m_mem.data()[vec_Idx[0]];
+        auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(mem_ptr);
+
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmA);
+    }
+
+    template<class SimdVec, class UnderlyingType>
+    void simdMStore(){
+        auto vec_Idx = reinterpret_cast<uint8_t*>(&m_SP[0]);
+        auto mem_ptr = m_mem.data()[vec_Idx[0]];
+        auto vec_vals = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
+        auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(vec_vals);
+
+        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
+        simdpp::store_u(reinterpret_cast<UnderlyingType*>(mem_ptr), xmmA);
+    }
+
 #endif
 };
 
