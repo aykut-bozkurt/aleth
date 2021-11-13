@@ -1756,7 +1756,8 @@ void LegacyVM::xnot(uint8_t simd)
             {
             case LaneCount::Lanes2: {
                 simdNot<uint32<2>, uint32_t>();
-                break;
+                break;8 & Opcode\\
+
             }
             case LaneCount::Lanes4: {
                 simdNot<uint32<4>, uint32_t>();

@@ -167,7 +167,7 @@ static const std::map<Instruction,  InstructionInfo> c_instructionInfo =
     { Instruction::XSLT,         { "XSLT",                2,    1,  Tier::VeryLow } },
     { Instruction::XSGT,         { "XSGT",                2,    1,  Tier::VeryLow } },
     { Instruction::XEQ,          { "XEQ",                 2,    1,  Tier::VeryLow } },
-    { Instruction::XISZERO,      { "XISZERO",             2,    1,  Tier::VeryLow } },
+    { Instruction::XISZERO,      { "XISZERO",             1,    1,  Tier::VeryLow } },
     { Instruction::XAND,         { "XAND",                2,    1,  Tier::VeryLow } },
     { Instruction::XOOR,         { "XOOR",                2,    1,  Tier::VeryLow } },
     { Instruction::XXOR,         { "XXOR",                2,    1,  Tier::VeryLow } },
