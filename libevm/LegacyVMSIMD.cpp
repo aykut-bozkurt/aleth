@@ -378,7 +378,32 @@ void LegacyVM::xmul(uint8_t simd)
         switch (simdByte.getLaneWidth())
         {
         case LaneWidth::Bytes1: {
-            // todo
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMul_1Byte<uint8<2>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMul_1Byte<uint8<4>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMul_1Byte<uint8<8>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdMul_1Byte<uint8<16>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes32: {
+                simdMul_1Byte<uint8<32>, uint8_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
             break;
         }
         case LaneWidth::Bytes2: {
@@ -428,7 +453,20 @@ void LegacyVM::xmul(uint8_t simd)
             break;
         }
         case LaneWidth::Bytes8: {
-            // todo
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMul_8Byte<uint64<2>, uint64_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMul_8Byte<uint64<4>, uint64_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
             break;
         }
         default: {
@@ -497,7 +535,104 @@ void LegacyVM::xdiv(uint8_t simd)
 
     switch(simdByte.getOpType()){
     case OpType::Int: {
-        // TODO
+        switch (simdByte.getLaneWidth())
+        {
+        case LaneWidth::Bytes1: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdDiv_1Byte<uint8<2>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdDiv_1Byte<uint8<4>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdDiv_1Byte<uint8<8>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdDiv_1Byte<uint8<16>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes32: {
+                simdDiv_1Byte<uint8<32>, uint8_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes2: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdDiv_2Byte<uint16<2>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdDiv_2Byte<uint16<4>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdDiv_2Byte<uint16<8>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdDiv_2Byte<uint16<16>, uint16_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes4: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdDiv_4Byte<uint32<2>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdDiv_4Byte<uint32<4>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdDiv_4Byte<uint32<8>, uint32_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes8: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdDiv_8Byte<uint64<2>, uint64_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdDiv_8Byte<uint64<4>, uint64_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        default: {
+            break;
+        }
+        }
         break;
     }
     case OpType::Floating: {
@@ -1932,7 +2067,20 @@ void LegacyVM::xshl(uint8_t simd)
             break;
         }
         case LaneWidth::Bytes8: {
-            // not supported
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdSHL<uint64<2>, uint64_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdSHL<uint64<4>, uint64_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
             break;
         }
         default:
