@@ -320,7 +320,7 @@ private:
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
-            spp[i] = vec_1bytesA[i] / vec_1bytesB[i];
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
 #endif
     }
@@ -342,7 +342,7 @@ private:
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
-            spp[i] = vec_1bytesA[i] / vec_1bytesB[i];
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
 #endif
     }
@@ -364,7 +364,7 @@ private:
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
-            spp[i] = vec_1bytesA[i] / vec_1bytesB[i];
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
 #endif
     }
@@ -386,7 +386,7 @@ private:
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
-            spp[i] = vec_1bytesA[i] / vec_1bytesB[i];
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
 #endif
     }
