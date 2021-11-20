@@ -694,9 +694,121 @@ void LegacyVM::xsdiv(uint8_t)
     // todo
 }
 
-void LegacyVM::xmod(uint8_t)
+void LegacyVM::xmod(uint8_t simd)
 {
-    //todo
+    auto simdByte = SIMDByte{simd};
+
+    switch(simdByte.getOpType()){
+    case OpType::Int: {
+        switch (simdByte.getLaneWidth())
+        {
+        case LaneWidth::Bytes1: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMod_1Byte<uint8<2>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMod_1Byte<uint8<4>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMod_1Byte<uint8<8>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdMod_1Byte<uint8<16>, uint8_t>();
+                break;
+            }
+            case LaneCount::Lanes32: {
+                simdMod_1Byte<uint8<32>, uint8_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes2: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMod_2Byte<uint16<2>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMod_2Byte<uint16<4>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMod_2Byte<uint16<8>, uint16_t>();
+                break;
+            }
+            case LaneCount::Lanes16: {
+                simdMod_2Byte<uint16<16>, uint16_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes4: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMod_4Byte<uint32<2>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMod_4Byte<uint32<4>, uint32_t>();
+                break;
+            }
+            case LaneCount::Lanes8: {
+                simdMod_4Byte<uint32<8>, uint32_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        case LaneWidth::Bytes8: {
+            switch (simdByte.getLaneCount())
+            {
+            case LaneCount::Lanes2: {
+                simdMod_8Byte<uint64<2>, uint64_t>();
+                break;
+            }
+            case LaneCount::Lanes4: {
+                simdMod_8Byte<uint64<4>, uint64_t>();
+                break;
+            }
+            default: {
+                break;
+            }
+            }
+            break;
+        }
+        default: {
+            break;
+        }
+        }
+        break;
+    }
+    case OpType::Floating: {
+        // no support
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
 }
 
 void LegacyVM::xsmod(uint8_t)

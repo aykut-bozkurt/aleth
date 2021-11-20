@@ -242,21 +242,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-#if SIMDPP_HAS_FLOAT64_TO_UINT64_CONVERSION
-        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
-        auto xmmA_fp = simdpp::to_float32(xmmA);
-        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
-        auto xmmB_fp = simdpp::to_float32(xmmB);
-        auto xmmC_fp = simdpp::mul(xmmA_fp, xmmB_fp);
-        SimdVec xmmC = simdpp::to_uint8(xmmC_fp);
-        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
-#else
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
             spp[i] = vec_1bytesA[i] * vec_1bytesB[i];
         }
-#endif
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -264,21 +254,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-#if SIMDPP_HAS_FLOAT64_TO_UINT64_CONVERSION
-        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
-        auto xmmA_fp = simdpp::to_float64(xmmA);
-        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
-        auto xmmB_fp = simdpp::to_float64(xmmB);
-        auto xmmC_fp = simdpp::mul(xmmA_fp, xmmB_fp);
-        SimdVec xmmC = simdpp::to_uint64(xmmC_fp);
-        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
-#else
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
             spp[i] = vec_1bytesA[i] * vec_1bytesB[i];
         }
-#endif
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -308,21 +288,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-#if SIMDPP_HAS_FLOAT64_TO_UINT64_CONVERSION
-        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
-        auto xmmA_fp = simdpp::to_float32(xmmA);
-        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
-        auto xmmB_fp = simdpp::to_float32(xmmB);
-        auto xmmC_fp = simdpp::div(xmmA_fp, xmmB_fp);
-        SimdVec xmmC = simdpp::to_uint8(xmmC_fp);
-        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
-#else
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
             spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
-#endif
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -330,21 +300,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-#if SIMDPP_HAS_FLOAT64_TO_UINT64_CONVERSION
-        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
-        auto xmmA_fp = simdpp::to_float32(xmmA);
-        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
-        auto xmmB_fp = simdpp::to_float32(xmmB);
-        auto xmmC_fp = simdpp::div(xmmA_fp, xmmB_fp);
-        SimdVec xmmC = simdpp::to_uint16(xmmC_fp);
-        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
-#else
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
             spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
-#endif
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -352,21 +312,11 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-#if SIMDPP_HAS_FLOAT64_TO_UINT64_CONVERSION
-        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
-        auto xmmA_fp = simdpp::to_float32(xmmA);
-        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
-        auto xmmB_fp = simdpp::to_float32(xmmB);
-        auto xmmC_fp = simdpp::div(xmmA_fp, xmmB_fp);
-        SimdVec xmmC = simdpp::to_uint32(xmmC_fp);
-        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
-#else
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
             spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
-#endif
     }
 
     template<class SimdVec, class UnderlyingType>
@@ -374,21 +324,59 @@ private:
         auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
         auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
 
-#if SIMDPP_HAS_FLOAT64_TO_UINT64_CONVERSION
-        SimdVec xmmA = simdpp::load_u(vec_1bytesA);
-        auto xmmA_fp = simdpp::to_float64(xmmA);
-        SimdVec xmmB = simdpp::load_u(vec_1bytesB);
-        auto xmmB_fp = simdpp::to_float64(xmmB);
-        auto xmmC_fp = simdpp::div(xmmA_fp, xmmB_fp);
-        SimdVec xmmC = simdpp::to_uint64(xmmC_fp);
-        simdpp::store_u(reinterpret_cast<UnderlyingType*>(m_SPP), xmmC);
-#else
         auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
         unsigned elemCount = 32u/sizeof(UnderlyingType);
         for(unsigned i=0; i<elemCount; i++){
             spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] / vec_1bytesB[i] : 0;
         }
-#endif
+    }
+
+    template<class SimdVec, class UnderlyingType>
+    void simdMod_1Byte(){
+        auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
+        auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
+
+        auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
+        unsigned elemCount = 32u/sizeof(UnderlyingType);
+        for(unsigned i=0; i<elemCount; i++){
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] % vec_1bytesB[i] : 0;
+        }
+    }
+
+    template<class SimdVec, class UnderlyingType>
+    void simdMod_2Byte(){
+        auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
+        auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
+
+        auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
+        unsigned elemCount = 32u/sizeof(UnderlyingType);
+        for(unsigned i=0; i<elemCount; i++){
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] % vec_1bytesB[i] : 0;
+        }
+    }
+
+    template<class SimdVec, class UnderlyingType>
+    void simdMod_4Byte(){
+        auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
+        auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
+
+        auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
+        unsigned elemCount = 32u/sizeof(UnderlyingType);
+        for(unsigned i=0; i<elemCount; i++){
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] % vec_1bytesB[i] : 0;
+        }
+    }
+
+    template<class SimdVec, class UnderlyingType>
+    void simdMod_8Byte(){
+        auto vec_1bytesA = reinterpret_cast<UnderlyingType*>(&m_SP[0]);
+        auto vec_1bytesB = reinterpret_cast<UnderlyingType*>(&m_SP[1]);
+
+        auto spp = reinterpret_cast<UnderlyingType*>(m_SPP);
+        unsigned elemCount = 32u/sizeof(UnderlyingType);
+        for(unsigned i=0; i<elemCount; i++){
+            spp[i] = (vec_1bytesB[i]) ? vec_1bytesA[i] % vec_1bytesB[i] : 0;
+        }
     }
 
     template<class SimdVec, class SimdVecMask, class UnderlyingType>
