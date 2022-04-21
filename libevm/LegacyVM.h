@@ -9,6 +9,7 @@
 #include "VMFace.h"
 #include <simdpp/simd.h>
 #include <functional>
+#include <unordered_map>
 
 namespace dev
 {
@@ -159,6 +160,8 @@ private:
     // input bytes are the inline simd type descriptors for the operand vectors on the stack
     //
 #if EIP_616
+    std::unordered_map<uint16_t, uint64_t> simdCosts = {{1, 1}, {2, 1}, {4, 1}, {8, 1}, {16,1}, {32, 1},
+        {64, 1},{128, 2},{256, 3}}; //  <= 64 bit op: 1, 128 bit op: 2, 256 bit op: 3
 
     void xadd    (uint8_t);
     void xmul    (uint8_t);
@@ -197,12 +200,7 @@ private:
     u256 vtow(uint8_t _b, const u256& _in);
     void wtov(uint8_t _b, u256 _in, u256& _o_out);
 
-    uint8_t simdType()
-    {
-        uint8_t nt = m_code[++m_PC];  // advance PC and get simd type from code
-        ++m_PC;                       // advance PC to next opcode, ready to continue
-        return nt;
-    }
+    uint64_t getSimdGasCost(uint8_t simd);
 
     template<class SimdVec, class UnderlyingType>
     void simdAdd(){

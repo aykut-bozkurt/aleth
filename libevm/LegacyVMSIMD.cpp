@@ -48,6 +48,14 @@ using namespace dev;
 using namespace dev::eth;
 using namespace dev::simd;
 
+uint64_t LegacyVM::getSimdGasCost(uint8_t simd){
+    auto simdByte = SIMDByte{simd};
+    auto lw = 1 << static_cast<uint64_t>(simdByte.getLaneWidth());
+    auto lc = 2 << static_cast<uint64_t>(simdByte.getLaneCount());
+
+    return simdCosts[8 * lw * lc];
+}
+
 void LegacyVM::xadd(uint8_t simd)
 {
     auto simdByte = SIMDByte{simd};

@@ -8,6 +8,7 @@ using namespace std;
 using namespace dev;
 using namespace dev::eth;
 
+
 uint64_t LegacyVM::memNeed(u256 const& _offset, u256 const& _size)
 {
     return toInt63(_size ? u512(_offset) + _size : u512(0));
@@ -852,229 +853,329 @@ void LegacyVM::interpretCases()
 
         CASE(XADD)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xadd(simdType());
+            m_PC += 2; // get to code
+            xadd(simd);
         }
         CONTINUE
 
         CASE(XMUL)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xmul(simdType());
+            m_PC += 2; // get to code
+            xmul(simd);
         }
         CONTINUE
 
         CASE(XSUB)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xsub(simdType());
+            m_PC += 2; // get to code
+            xsub(simd);
         }
         CONTINUE
 
         CASE(XDIV)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = 5 * getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xdiv(simdType());
+            m_PC += 2; // get to code
+            xdiv(simd);
         }
         CONTINUE
 
         CASE(XSDIV)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xsdiv(simdType());
+            m_PC += 2; // get to code
+            xsdiv(simd);
         }
         CONTINUE
 
         CASE(XMOD)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xmod(simdType());
+            m_PC += 2; // get to code
+            xmod(simd);
         }
         CONTINUE
 
         CASE(XSMOD)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xsmod(simdType());
+            m_PC += 2; // get to code
+            xsmod(simd);
         }
         CONTINUE
 
         CASE(XLT)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xlt(simdType());
+            m_PC += 2; // get to code
+            xlt(simd);
         }
         CONTINUE
 
         CASE(XGT)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xgt(simdType());
+            m_PC += 2; // get to code
+            xgt(simd);
         }
         CONTINUE
 
         CASE(XSLT)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xslt(simdType());
+            m_PC += 2; // get to code
+            xslt(simd);
         }
         CONTINUE
 
         CASE(XSGT)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xsgt(simdType());
+            m_PC += 2; // get to code
+            xsgt(simd);
         }
         CONTINUE
 
         CASE(XEQ)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xeq(simdType());
+            m_PC += 2; // get to code
+            xeq(simd);
         }
         CONTINUE
 
         CASE(XISZERO)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xzero(simdType());
+            m_PC += 2; // get to code
+            xzero(simd);
         }
         CONTINUE
 
         CASE(XAND)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xand(simdType());
+            m_PC += 2; // get to code
+            xand(simd);
         }
         CONTINUE
 
         CASE(XOOR)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xoor(simdType());
+            m_PC += 2; // get to code
+            xoor(simd);
         }
         CONTINUE
 
         CASE(XXOR)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xxor(simdType());
+            m_PC += 2; // get to code
+            xxor(simd);
         }
         CONTINUE
 
         CASE(XNOT)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xnot(simdType());
+            m_PC += 2; // get to code
+            xnot(simd);
         }
         CONTINUE
 
         CASE(XSHL)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xshl(simdType());
+            m_PC += 2; // get to code
+            xshl(simd);
         }
         CONTINUE
 
         CASE(XSHR)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xshr(simdType());
+            m_PC += 2; // get to code
+            xshr(simd);
         }
         CONTINUE
 
         CASE(XSAR)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xsar(simdType());
+            m_PC += 2; // get to code
+            xsar(simd);
         }
         CONTINUE
 
         CASE(XROL)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xrol(simdType());
+            m_PC += 2; // get to code
+            xrol(simd);
         }
         CONTINUE
 
         CASE(XROR)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xror(simdType());
+            m_PC += 2; // get to code
+            xror(simd);
         }
         CONTINUE
 
         CASE(XMLOAD)
         {
             updateMem(toInt63(m_SP[0]) + 32);
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xmload(simdType());
+            m_PC += 2; // get to code
+            xmload(simd);
         }
         CONTINUE
 
         CASE(XMSTORE)
         {
             updateMem(toInt63(m_SP[0]) + 32);
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xmstore(simdType());
+            m_PC += 2; // get to code
+            xmstore(simd);
         }
         CONTINUE
 
         CASE(XSLOAD)
         {
             m_runGas = toInt63(m_schedule->sloadGas);
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xsload(simdType());
+            m_PC += 2; // get to code
+            xsload(simd);
         }
         CONTINUE
 
@@ -1084,37 +1185,53 @@ void LegacyVM::interpretCases()
                 throwDisallowedStateChange();
 
             updateSSGas();
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xsstore(simdType());
+            m_PC += 2; // get to code
+            xsstore(simd);
         }
         CONTINUE
 
         CASE(XVTOWIDE)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xvtowide(simdType());
+            m_PC += 2; // get to code
+            xvtowide(simd);
         }
         CONTINUE
 
         CASE(XWIDETOV)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xwidetov(simdType());
+            m_PC += 2; // get to code
+            xwidetov(simd);
         }
         CONTINUE
 
         CASE(XPUSH)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xpush(simdType());
+            m_PC += 2; // get to code
+            xpush(simd);
         }
         CONTINUE
 
@@ -1144,19 +1261,27 @@ void LegacyVM::interpretCases()
 
         CASE(XSWIZZLE)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xswizzle(simdType());
+            m_PC += 2; // get to code
+            xswizzle(simd);
         }
         CONTINUE
 
         CASE(XSHUFFLE)
         {
+            uint8_t simd = m_code[m_PC + 1]; // get simd byte
+
+            m_runGas = getSimdGasCost(simd);
             ON_OP();
             updateIOGas();
 
-            xshuffle(simdType());
+            m_PC += 2; // get to code
+            xshuffle(simd);
         }
         CONTINUE
 #else
